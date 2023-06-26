@@ -1,0 +1,4 @@
+../Drivers/Eeprom/EepromFns.c:12:6:ReadFlyerSettingsFromEeprom	16	static
+../Drivers/Eeprom/EepromFns.c:28:9:WriteFlyerSettingsIntoEeprom	24	static
+../Drivers/Eeprom/EepromFns.c:61:9:CheckFlyerSettings	16	static
+../Drivers/Eeprom/EepromFns.c:101:6:LoadFactoryDefaultSettings	16	static
