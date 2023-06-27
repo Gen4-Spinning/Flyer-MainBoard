@@ -176,6 +176,13 @@ void RunState(void){
 			S.BT_sendState = 0;
 		}
 
+		/* allow for getting settings during runtime */
+		if (S.switchState == TO_SETTINGS){
+			ChangeState(&S,SETTINGS_STATE);
+			S.switchState = 0;
+			break;
+		}
+
 		if (mcParams.currentLayer >= msp.targetLayers){
 			ChangeState(&S,FINISHED_STATE);
 			break;

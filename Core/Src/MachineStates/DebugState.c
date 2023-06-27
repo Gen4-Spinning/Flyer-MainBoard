@@ -167,7 +167,11 @@ void DebugState(void){
 			S.BT_sendState = 0;
 		}
 
-
+		if (S.switchState == TO_SETTINGS){
+			ChangeState(&S,SETTINGS_STATE);
+			S.switchState = 0;
+			break;
+		}
 
 	}//closes while
 

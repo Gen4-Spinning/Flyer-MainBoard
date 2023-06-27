@@ -48,5 +48,5 @@ void SettingsState(void){
 	   * machine parameters struct in the idle state when you first enter it
 	   */
 
-	  ChangeState(&S,IDLE_STATE);
+	  ChangeState(&S,S.prev_state);
 }
