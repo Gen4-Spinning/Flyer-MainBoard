@@ -139,7 +139,7 @@ void FDCAN_parseForMotherBoard()
 		case LIFTRUNTIMEDATA_FUNCTIONID:
 			motorID = GetMotorID_from_CANAddress(source_address);
 			FDCAN_Recieve_RunDataFromLiftMotors(functionID,motorID);
-			SO_CheckLiftRelativeError(&SO,&R[LEFT_LIFT],&R[RIGHT_LIFT]);
+			SO_CheckLiftRelativeError(&S,&SO,&R[LEFT_LIFT],&R[RIGHT_LIFT]);
 			SO_incrementCANCounter(&SO,motorID);
 			break;
 		case LIFTSTROKEOVER_FUNCTIONID:
@@ -239,6 +239,7 @@ void FDCAN_Recieve_HomingDataFromLiftMotors(uint8_t source_address)//,LiftRunTim
 {
 	uint8_t data = RxData[0];
 	if (data == HOMING_DONE){
+		SO_disableAndResetCANObservers(&SO);
 		if (source_address == LEFTLIFT_ADDRESS){
 			S.HomingDoneCounter += 1;
 		}else if (source_address == RIGHTLIFT_ADDRESS){
@@ -256,9 +257,11 @@ void FDCAN_Recieve_HomingDataFromLiftMotors(uint8_t source_address)//,LiftRunTim
 	}
 }
 
-void FDCAN_Recieve_LiftChangeDirection(uint8_t source)
-{
+void FDCAN_Recieve_LiftChangeDirection(uint8_t source){
 	SO.liftStrokeOverMsgsRecieved ++;
+	if (SO.liftStrokeOverMsgsRecieved == 1){
+		SO_disableAndResetCANObservers(&SO);
+	}
 	if(SO.liftStrokeOverMsgsRecieved==2){
 		mcParams.currentLayer += 1;
 		mcParams.currentDir = !mcParams.currentDir;
@@ -273,6 +276,9 @@ void FDCAN_Recieve_LiftChangeDirection(uint8_t source)
 		FDCAN_sendNewStroke_ToBothLiftMotors(&mcParams);
 		FDCAN_sendChangeTarget_ToMotor(BOBBIN_ADDRESS,mcParams.bobbinMotorRPM,200);
 		SO.liftStrokeOverMsgsRecieved = 0;
+		if (S.runMode != RUN_PAUSED){ // if we get the cahnge layer when we are pausing we dont want to  enable the CAN observer
+			SO_enableAllCANObservers(&SO);
+		}
 		L.logLayerChange = 1; // for logging
 	}
 }

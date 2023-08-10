@@ -66,9 +66,16 @@ void HomingState(void){
 			S.oneTime = 0;
 		}
 
+
+		// because right at the end, during homing we re getting Can cut error
+		if (SO.CO[LEFT_LIFT].enable == 1){
+			if ((R[LEFT_LIFT].presentPosition <= 5) || (R[RIGHT_LIFT].presentPosition<=5)){
+				SO_disableAndResetLiftObservers(&SO);
+			}
+		}
+
 		if (S.HomingDone == 1){
 			//TODO - later make it such that once the CAN starts it never needs to stop.
-
 			SO_disableAndResetCANObservers(&SO);
 			Log_disableLogging(&L);
 

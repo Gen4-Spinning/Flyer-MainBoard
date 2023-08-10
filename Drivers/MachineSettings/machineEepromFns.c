@@ -71,7 +71,7 @@ uint8_t CheckMachineSettings(machineSettingsTypeDef* m){
 	if ((m->spindleSpeed > MAX_SPINDLE_SPEED ) || (m->spindleSpeed < MIN_SPINDLE_SPEED)){
 		return 0;
 	}
-	if (m->tensionDraft > 16.0f){
+	if (m->tensionDraft > 15.0f){
 		return 0;
 	}
 	if (m->tpi > 15.0f){

@@ -37,6 +37,7 @@ void RunState(void){
 	uint8_t response = 0;
 	uint8_t noOfMotors = 0;
 	uint8_t BTpacketSize = 0;
+	long currentTime;
 	while(1){
 
 		if (S.oneTime){
@@ -125,12 +126,17 @@ void RunState(void){
 			break;
 		}
 
+		if (S.oneSecTimer != currentTime){
+			mcParams.totalPower = R[0].power + R[1].power + R[2].power + R[3].power + R[4].power + R[5].power;
+			currentTime = S.oneSecTimer;
+		}
 
+		/*
 		if (sensor.latchedCreelSensor){
 			//Pause
 			sensor.latchedCreelSensor = 0;
-			uint8_t motors[] = {FLYER,BOBBIN,FR,BR,LEFT_LIFT,RIGHT_LIFT};
-			noOfMotors = 6;
+			uint8_t motors[] = {FR,BR,LEFT_LIFT,RIGHT_LIFT};
+			noOfMotors = 4;
 			response = SendCommands_To_MultipleMotors(motors,noOfMotors,RAMPDOWN_STOP);
 			TowerLamp_SetState(&hmcp, &mcp_portB,BUZZER_OFF,RED_OFF,GREEN_OFF,AMBER_ON);
 			TowerLamp_ApplyState(&hmcp,&mcp_portB);
@@ -141,7 +147,7 @@ void RunState(void){
 			S.runMode = RUN_PAUSED;
 			S.BT_pauseReason = BT_PAUSE_CREEL_SLIVER_CUT;
 			L.logRunStateChange = 1;
-		}
+		}*/
 
 		//--------ways to go into Error State--------
 
@@ -184,6 +190,8 @@ void RunState(void){
 		}
 
 		if (mcParams.currentLayer >= msp.targetLayers){
+			//Wait for a while for the layer to change and then stop. Otherwise the lift change direction
+			// msg doesnt seem to go..
 			ChangeState(&S,FINISHED_STATE);
 			break;
 		}

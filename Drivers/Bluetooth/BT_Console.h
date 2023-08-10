@@ -31,8 +31,8 @@
 #define BTCMD_REBOOT 5
 #define BTCMD_GETNAME 6
 
-#define MACHINENAME "FLYER"
-#define NAME_STR_LEN 5
+#define MACHINENAME "FLYER01"
+#define NAME_STR_LEN 7
 
 typedef struct BTconsole{
 	uint8_t manual_setup;

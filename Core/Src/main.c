@@ -160,13 +160,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
   if (htim == &htim16){ // 1 sec timer that checks if the CAN connections are all OK.
 	  SO.canOverallStatus = SO_checkCanObservers(&SO);
-	  if (SO.canOverallStatus != ALL_CANS_HEALTHY){
+	  /*if (SO.canOverallStatus != ALL_CANS_HEALTHY){
 		  ME.ErrorFlag = 1;
 		  ME_addErrors(&ME,ERR_SYSTEM_LEVEL_SOURCE,SYS_CAN_CUT_ERROR, SO.canOverallStatus, 0); // maybe later find out which ACK failed.
 		  S.SMPS_switchOff = 1;
 		  //stp the timer if you find you have an error.
 		  HAL_TIM_Base_Stop_IT(&htim16);
-	  }
+	  }*/
   }
 
   if(htim==&htim15){
@@ -188,6 +188,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  timer7Count ++;
 	  if (timer7Count % 5 == 0){
 		  S.BT_sendState = 1;
+		  if (S.runMode == RUN_OPERATING){
+			  mcParams.outputLength_mtrs += mcParams.delivery_mtr_min/60 * 0.5f;
+		  }
 	  }
 	  if (timer7Count == 10){
 		  S.oneSecTimer++;
@@ -373,8 +376,8 @@ int main(void)
   S.current_state = INITIAL_STATE;
   ChangeState(&S,IDLE_STATE);
 
-  //Setup the Bluetooth device MANUALLY ONLY.
-  //BTCmd.manual_setup = 1;
+  //Setup the Bluetooth device MANUALLY ONLY.//BECAUSE THE FLYER BT KEEPS LOSING ITS NAME
+  BTCmd.manual_setup = 1;
   if (BTCmd.manual_setup){
 	  BTCmd.manual_setup_result = BT_SetupDevice();
 	  if(BTCmd.manual_setup_result != 1){
@@ -388,17 +391,9 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim16);
 
   //SMPS - turn on the SMPS, wait a while to see if  short command.
-  SMPS_TurnOn();
-  HAL_Delay(3000);//contactor takes a long time to turn on.
-
-  uint8_t smps = (uint8_t)(HAL_GPIO_ReadPin(SMPS_OK_IP_GPIO_Port, SMPS_OK_IP_Pin));
-  /*if (smps == SMPS_OFF){
-	  ME.ErrorFlag = 1;
-	  ME_addErrors(&ME,ERR_SYSTEM_LEVEL_SOURCE, SYS_SMPS_ERROR, ERROR_SOURCE_SYSTEM,0); // maybe later find out which ACK failed.
-	  S.SMPS_switchOff = 1;
-  }*/
-
-  S.LOG_enabled = 1;
+  SMPS_Init();
+  HAL_Delay(1000);//contactor takes a long time to turn on.
+  S.SMPS_cntrl = SMPS_TURNEDON;
 
   /* USER CODE END 2 */
 
@@ -442,7 +437,7 @@ int main(void)
 	}
 
 	if (S.current_state == FINISHED_STATE){
-			FinishState();
+		FinishState();
 	}
 
     /* USER CODE END WHILE */
@@ -981,8 +976,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : YELLOW_Pin GREEN_Pin RED_Pin ROTARY_Pin */
-  GPIO_InitStruct.Pin = YELLOW_Pin|GREEN_Pin|RED_Pin|ROTARY_Pin;
+  /*Configure GPIO pins : GREEN_Pin YELLOW_Pin RED_Pin ROTARY_Pin */
+  GPIO_InitStruct.Pin = GREEN_Pin|YELLOW_Pin|RED_Pin|ROTARY_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);

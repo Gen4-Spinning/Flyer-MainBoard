@@ -49,4 +49,7 @@ void SettingsState(void){
 	   */
 
 	  ChangeState(&S,S.prev_state);
+	  if (S.current_state == RUN_STATE){
+		  S.oneTime = 0;
+	  }
 }

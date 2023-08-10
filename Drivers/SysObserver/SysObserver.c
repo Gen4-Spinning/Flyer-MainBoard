@@ -11,12 +11,17 @@
 extern TIM_HandleTypeDef htim6;
 extern TIM_HandleTypeDef htim16;
 
-uint8_t SO_CheckLiftRelativeError(SysObserver *so,RunTime_TypeDef *leftLift_r,RunTime_TypeDef *rightLift_r){
+uint8_t SO_CheckLiftRelativeError(StateTypeDef *s,SysObserver *so,RunTime_TypeDef *leftLift_r,RunTime_TypeDef *rightLift_r){
 	if (so->initialLiftPosRecieved == 1){
 		so->liftsPosDifference = leftLift_r->presentPosition - rightLift_r->presentPosition;
-		if (fabs(so->liftsPosDifference) > 4){
+		if (fabs(so->liftsPosDifference) > 5.5){ //
 			so->liftRelativePosError = 1;
 		}
+		//FOR SANJUAN- with the lift motor Encoder code. While Homing we use the GB encoder.
+		//but right at the top of the stroke, furthest from where we calibrated the GB, we can have some delta
+		//on both sides and this can cause a lift relative error.
+		// at the top the relative lift error is 4, so to encompass that, we set the lift pos Difference to
+		//5.5
 	}
 	return so->liftRelativePosError;
 }
@@ -49,6 +54,23 @@ void SO_disableAndResetCANObservers(SysObserver *so){
 		so->CO[i].canDataCount = 0;
 	}
 	HAL_TIM_Base_Stop_IT(&htim16);
+}
+
+void SO_disableAndResetLiftObservers(SysObserver *so){
+	for (int i=4;i<6;i++){
+		so->CO[i].enable = 0;
+		so->CO[i].canDataCount = 0;
+	}
+	HAL_TIM_Base_Stop_IT(&htim16);
+}
+void SO_enableAllCANObservers(SysObserver *so){
+	for (int i=0;i<6;i++){
+		so->CO[i].enable = 1;
+		so->CO[i].canDataCount = 0;
+	}
+	__HAL_TIM_SET_COUNTER(&htim16,0);
+	htim16.Instance->SR &= ~TIM_SR_UIF; // Clear pending flag of timer16
+	HAL_TIM_Base_Start_IT(&htim16); // start the 1s tim16 in which we check the CAN states
 }
 
 void SO_incrementCANCounter(SysObserver *so,uint8_t motorID){

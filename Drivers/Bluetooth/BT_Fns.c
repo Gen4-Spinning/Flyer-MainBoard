@@ -450,7 +450,7 @@ uint8_t BT_MC_generateStatusMsg(uint8_t state){
 			  runAttributes = 8;
 		  }
 		  initLength = Init_TXBuf_Frame(MC_STATE,state,runAttributes);
-		  generateTLV_I(TLV_Buffer,RUN_LAYERNO,1);//mcParams.currentLayer);
+		  generateTLV_I(TLV_Buffer,RUN_LAYERNO,mcParams.currentLayer);
 		  add_TLVBuf_To_TxBuf(TLV_Buffer,TLV_INT,initLength+tlvSize);
 		  tlvSize += TLV_INT;
 
@@ -458,38 +458,38 @@ uint8_t BT_MC_generateStatusMsg(uint8_t state){
 		  add_TLVBuf_To_TxBuf(TLV_Buffer,TLC_C,initLength+tlvSize);
 		  tlvSize += TLC_C;
 
-		  generateTLV_F(TLV_Buffer,RUN_LEFT_LIFT_DIST,123.22);//R[LEFT_LIFT].presentPosition);
+		  generateTLV_F(TLV_Buffer,RUN_LEFT_LIFT_DIST,R[LEFT_LIFT].presentPosition);
 		  add_TLVBuf_To_TxBuf(TLV_Buffer,TLV_FLOAT,initLength+tlvSize);
 		  tlvSize += TLV_FLOAT;
 
-		  generateTLV_F(TLV_Buffer,RUN_RIGHT_LIFT_DIST,123.55);//R[RIGHT_LIFT].presentPosition);
+		  generateTLV_F(TLV_Buffer,RUN_RIGHT_LIFT_DIST,R[RIGHT_LIFT].presentPosition);
 		  add_TLVBuf_To_TxBuf(TLV_Buffer,TLV_FLOAT,initLength+tlvSize);
 		  tlvSize += TLV_FLOAT;
 
 		  if (S.BT_runInfoToSend == RUN_PRODUCTION_DATA){
-			  generateTLV_F(TLV_Buffer,RUN_OUTPUT_MTRS_PER_SPINDLE,56.77);//mcParams.outputLength_mtrs);
+			  generateTLV_F(TLV_Buffer,RUN_OUTPUT_MTRS_PER_SPINDLE,mcParams.outputLength_mtrs);
 			  add_TLVBuf_To_TxBuf(TLV_Buffer,TLV_FLOAT,initLength+tlvSize);
 			  tlvSize += TLV_FLOAT;
 
-			  generateTLV_F(TLV_Buffer,RUN_TOTAL_POWER,250.76); // totalPower
+			  generateTLV_F(TLV_Buffer,RUN_TOTAL_POWER,mcParams.totalPower);
 			  add_TLVBuf_To_TxBuf(TLV_Buffer,TLV_FLOAT,initLength+tlvSize);
 			  tlvSize += TLV_FLOAT;
 
 		  }else{
 			  //send motor Data
-			  generateTLV_I(TLV_Buffer,RUN_TLV_MOTOR_TEMP, 45 + S.BT_runInfowhichMotor);//R[S.BT_runInfowhichMotor].motorTemp);
+			  generateTLV_I(TLV_Buffer,RUN_TLV_MOTOR_TEMP, R[S.BT_runInfowhichMotor].motorTemp);
 			  add_TLVBuf_To_TxBuf(TLV_Buffer,TLV_INT,initLength+tlvSize);
 			  tlvSize += TLV_INT;
 
-			  generateTLV_I(TLV_Buffer,RUN_TLV_MOSFET_TEMP, 48 + S.BT_runInfowhichMotor);//R[S.BT_runInfowhichMotor].mosfetTemp);
+			  generateTLV_I(TLV_Buffer,RUN_TLV_MOSFET_TEMP, R[S.BT_runInfowhichMotor].mosfetTemp);
 			  add_TLVBuf_To_TxBuf(TLV_Buffer,TLV_INT,initLength+tlvSize);
 			  tlvSize += TLV_INT;
 
-			  generateTLV_F(TLV_Buffer,RUN_TLV_MOTOR_CURRENT,0.65 + S.BT_runInfowhichMotor);//R[S.BT_runInfowhichMotor].currentA);
+			  generateTLV_F(TLV_Buffer,RUN_TLV_MOTOR_CURRENT,R[S.BT_runInfowhichMotor].currentA);
 			  add_TLVBuf_To_TxBuf(TLV_Buffer,TLV_FLOAT,initLength+tlvSize);
 			  tlvSize += TLV_FLOAT;
 
-			  generateTLV_I(TLV_Buffer,RUN_TLV_MOTOR_RPM,1234 + S.BT_runInfowhichMotor);//R[S.BT_runInfowhichMotor].presentRPM);
+			  generateTLV_I(TLV_Buffer,RUN_TLV_MOTOR_RPM, R[S.BT_runInfowhichMotor].presentRPM);
 			  add_TLVBuf_To_TxBuf(TLV_Buffer,TLV_INT,initLength+tlvSize);
 			  tlvSize += TLV_INT;
 		  }

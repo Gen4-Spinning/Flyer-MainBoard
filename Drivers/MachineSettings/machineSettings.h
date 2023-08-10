@@ -31,7 +31,7 @@
 
 //LIMITS
 #define MAX_MOTOR_RPM 1450
-#define MAX_SPINDLE_SPEED 850
+#define MAX_SPINDLE_SPEED 750
 #define MIN_SPINDLE_SPEED 500
 #define MAX_CONTENT_DIA_MM 140
 #define OFFSET_FROM_MAXLAYERS 5
@@ -85,6 +85,7 @@ typedef struct machineParamaters_Struct{
     float totalRunTime_Min;
     float currentRunTimeMin;
     float outputLength_mtrs;
+    float totalPower;
 
 }machineParamsTypeDef;
 

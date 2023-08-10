@@ -70,12 +70,12 @@ void stopInching(void);
 #define LED2_GPIO_Port GPIOC
 #define LED3_Pin GPIO_PIN_15
 #define LED3_GPIO_Port GPIOC
-#define YELLOW_Pin GPIO_PIN_0
-#define YELLOW_GPIO_Port GPIOA
-#define YELLOW_EXTI_IRQn EXTI0_IRQn
-#define GREEN_Pin GPIO_PIN_1
+#define GREEN_Pin GPIO_PIN_0
 #define GREEN_GPIO_Port GPIOA
-#define GREEN_EXTI_IRQn EXTI1_IRQn
+#define GREEN_EXTI_IRQn EXTI0_IRQn
+#define YELLOW_Pin GPIO_PIN_1
+#define YELLOW_GPIO_Port GPIOA
+#define YELLOW_EXTI_IRQn EXTI1_IRQn
 #define RED_Pin GPIO_PIN_2
 #define RED_GPIO_Port GPIOA
 #define RED_EXTI_IRQn EXTI2_IRQn

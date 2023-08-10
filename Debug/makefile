@@ -51,34 +51,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := MainBoard_Flyer
+BUILD_ARTIFACT_NAME := MainBoard_Flyer01
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-MainBoard_Flyer.elf \
+MainBoard_Flyer01.elf \
 
 MAP_FILES += \
-MainBoard_Flyer.map \
+MainBoard_Flyer01.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-MainBoard_Flyer.list \
+MainBoard_Flyer01.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: MainBoard_Flyer.elf secondary-outputs
+main-build: MainBoard_Flyer01.elf secondary-outputs
 
 # Tool invocations
-MainBoard_Flyer.elf MainBoard_Flyer.map: $(OBJS) $(USER_OBJS) /home/harsha/STM32CubeIDE/workspace_1.10.0/MainBoard_Flyer/STM32G431CBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "MainBoard_Flyer.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/harsha/STM32CubeIDE/workspace_1.10.0/MainBoard_Flyer/STM32G431CBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MainBoard_Flyer.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+MainBoard_Flyer01.elf MainBoard_Flyer01.map: $(OBJS) $(USER_OBJS) /home/harsha/STM32CubeIDE/workspace_1.10.0/MainBoard_Flyer01/STM32G431CBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "MainBoard_Flyer01.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/harsha/STM32CubeIDE/workspace_1.10.0/MainBoard_Flyer01/STM32G431CBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MainBoard_Flyer01.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -87,14 +87,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-MainBoard_Flyer.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "MainBoard_Flyer.list"
+MainBoard_Flyer01.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "MainBoard_Flyer01.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) MainBoard_Flyer.elf MainBoard_Flyer.list MainBoard_Flyer.map default.size.stdout
+	-$(RM) MainBoard_Flyer01.elf MainBoard_Flyer01.list MainBoard_Flyer01.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

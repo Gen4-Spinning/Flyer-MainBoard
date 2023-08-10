@@ -10,6 +10,7 @@
 
 #include "machineSettings.h"
 #include "Struct.h"
+#include "StateMachine.h"
 #include "math.h"
 
 #define ALL_CANS_HEALTHY 99
@@ -35,7 +36,7 @@ typedef struct SysObser_Struct{
 extern SysObserver SO;
 
 
-uint8_t SO_CheckLiftRelativeError(SysObserver *so,RunTime_TypeDef *leftLift_r,RunTime_TypeDef *rightLift_r);
+uint8_t SO_CheckLiftRelativeError(StateTypeDef *s,SysObserver *so,RunTime_TypeDef *leftLift_r,RunTime_TypeDef *rightLift_r);
 void SO_Start_LiftRelativeError_Delay(void);
 void SO_Reset_InitialLiftPosRecieved(SysObserver *so);
 
@@ -43,5 +44,8 @@ void SO_enableCANObservers(SysObserver *so,uint8_t *motorList,uint8_t noOfMotors
 void SO_disableAndResetCANObservers(SysObserver *so);
 void SO_incrementCANCounter(SysObserver *so,uint8_t motorID);
 uint8_t SO_checkCanObservers(SysObserver *so);
+
+void SO_enableAllCANObservers(SysObserver *so);
+void SO_disableAndResetLiftObservers(SysObserver *so);
 
 #endif /* SYSOBSERVER_H_ */

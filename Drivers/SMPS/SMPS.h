@@ -17,6 +17,7 @@
 #define SMPS_ON 0
 #define SMPS_OFF 1
 
+void SMPS_Init(void);
 void SMPS_TurnOn(void);
 void SMPS_TurnOff(void);
 
